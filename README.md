@@ -33,7 +33,7 @@ In a [OEM multi-tenant](https://community.qlik.com/t5/Product-Innovation/Qlik-no
 
 - The application are reloaded on a Qlik Sense Client Managed site.
 - The applications are distributed at each reloads into the Qlik Cloud customer tenants.
-- The customers consume the application on their own Qlik Cloud tenants. They can leverage QLik Cloud features on this application as alerting or automations. The client-managed RIM nodes (front-end engines) could be decommissioned.
+- The customers consume the application on their own Qlik Cloud tenants. They can leverage Qlik Cloud features on this application as alerting or automations. The client-managed RIM nodes (front-end engines) could be decommissioned.
 
 ![image](https://user-images.githubusercontent.com/24877503/215833659-2783fd36-dbae-4bd7-a6b6-5a8e6472cae2.png)
 
