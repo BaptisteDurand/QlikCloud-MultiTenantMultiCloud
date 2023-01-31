@@ -27,7 +27,7 @@ A distribution phase where dashboards are distributed from your client-managed p
 A Qlik Sense Enterprise multi-cloud deployment lets you deploy both Qlik Sense Enterprise on-premises and Qlik Sense Enterprise on cloud so users can develop apps on-premises and access them from the cloud.
 For more information [Qlik Help](https://help.qlik.com/en-US/sense-admin/November2022/Subsystems/DeployAdministerQSE/Content/Sense_DeployAdminister/Multi-Cloud/Cloud-deployment.htm)
 
-![image](https://user-images.githubusercontent.com/24877503/215739596-36406bef-6d7b-4d3a-aeb7-b2c2555f65ba.png)
+![image](https://user-images.githubusercontent.com/24877503/215833942-ccc050d0-e007-4618-9f99-688fced48d3f.png)
 
 In a [OEM multi-tenant](https://community.qlik.com/t5/Product-Innovation/Qlik-now-offers-Multitenant-Provisioning-in-Qlik-Cloud-for-our/ba-p/1993948) context, here's a architecture with multi-cloud deployment.
 
@@ -35,8 +35,7 @@ In a [OEM multi-tenant](https://community.qlik.com/t5/Product-Innovation/Qlik-no
 - The applications are distributed at each reloads into the Qlik Cloud customer tenants.
 - The customers consume the application on their own Qlik Cloud tenants. They can leverage QLik Cloud features on this application as alerting or automations. The client-managed RIM nodes (front-end engines) could be decommissioned.
 
-
-![image](https://user-images.githubusercontent.com/24877503/215740998-97390b10-44cd-458c-9489-78d7b7bf2c8b.png)
+![image](https://user-images.githubusercontent.com/24877503/215833659-2783fd36-dbae-4bd7-a6b6-5a8e6472cae2.png)
 
 ***How to setup this OEM multi-cloud architecture?***
 
