@@ -5,7 +5,7 @@
 A Qlik Sense to Qlik Cloud migration can be performed with different strategies regarding your goals, your current cloud architecture and the expected values.
 - Are you focusing on new customer deployment?
 - Are you looking for On-Premise Qlik servers Footprint reduction?
-- Do you want leverage a specific Qlik Cloud added value product?
+- Do you want to leverage a specific Qlik Cloud added value product?
 - ...
 
 We recommend the [Qlik Migration Center](https://help.qlik.com/en-US/migration/Content/Migration/qliksense-qliksense-planning-your-migration.htm) to help you to define this strategy.
@@ -31,11 +31,12 @@ For more information [Qlik Help](https://help.qlik.com/en-US/sense-admin/Novembe
 
 In a [OEM multi-tenant](https://community.qlik.com/t5/Product-Innovation/Qlik-now-offers-Multitenant-Provisioning-in-Qlik-Cloud-for-our/ba-p/1993948) context, here's a architecture with multi-cloud deployment.
 
-![image](https://user-images.githubusercontent.com/24877503/215740998-97390b10-44cd-458c-9489-78d7b7bf2c8b.png)
-
 - The application are reloaded on a Qlik Sense Client Managed site.
 - The applications are distributed at each reloads into the Qlik Cloud customer tenants.
-- The customers consume the application on their own Qlik Cloud tenants. They can leverage QLik Cloud features on this application as alerting or automations. The client-managed RIM nodes (front-end engines) could be decommissioned. 
+- The customers consume the application on their own Qlik Cloud tenants. They can leverage QLik Cloud features on this application as alerting or automations. The client-managed RIM nodes (front-end engines) could be decommissioned.
+
+
+![image](https://user-images.githubusercontent.com/24877503/215740998-97390b10-44cd-458c-9489-78d7b7bf2c8b.png)
 
 ***How to setup this OEM multi-cloud architecture?***
 
