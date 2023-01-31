@@ -40,7 +40,7 @@ In a [OEM multi-tenant](https://community.qlik.com/t5/Product-Innovation/Qlik-no
 
 ***How to setup this OEM multi-cloud architecture?***
 
-## How to setup?
+## How to setup
 
 *Assumption : we assume that customer tenants have been provisionned and configured.*
 
@@ -58,13 +58,43 @@ Main steps are :
 
 For more detailled information : [Qlik Help : Distributing apps from Qlik Sense Enterprise on Windows to Qlik Sense Enterprise SaaS](https://help.qlik.com/en-US/sense-admin/November2022/Subsystems/DeployAdministerQSE/Content/Sense_DeployAdminister/Multi-Cloud/distributing-apps-QSEoW-to-QCS.htm)
 
-Note : In a multi-cloud distribution, based content and community content are distributed.
+Note : In a multi-cloud distribution, base content and community content are distributed.
 
 ***Does it can be automated?***
 
-### What 
+## Automate it in your own process
+
+*Pre requisites*
+
+*We assume that customer tenants have been provisionned and configured.*
+
+*Have a Qlik Sense client managed environment set up for multi cloud :*
+- *Distribution rule (This step should be made once by environment)*
+- *Customer App are published and setup following distribution rule (ex : custom properties). If needed, please refer to Qlik Sense Client Managed [QRS API](https://help.qlik.com/en-US/sense-developer/November2022/Subsystems/RepositoryServiceAPI/Content/Sense_RepositoryServiceAPI/RepositoryServiceAPI-Introduction.htm)*
+
+Different API call to Qlik Sense Client Managed site and Qlik Cloud allow to setup a multi cloud distribution.
+Main used API are :
+- Qlik Cloud [Rest API](https://qlik.dev/apis#manage)
+- Qlik Distribution API. This API are currently private so their use is unsupported at this stage.
+
+1. Create a distribution depoyment to the customer tenant on Qlik Sense Client Managed.
+2. Get the deployment token from this new deployment.
+3. Get customer tenant access token with OAuth credentials
+4. Create a Multi Cloud IDP
+5. Force the distribution of the application
+6. Execute the initial move of the application to a managed space
+
+Here a [Postman collection]() showing this process.
+
+![image](https://user-images.githubusercontent.com/24877503/215822429-9929a5dd-ef3c-4acc-aa0d-3414ad716911.png)
 
 ## Attention points
 
+As mentionned previously some limitations or consideration must be remind for a large and automated deployment :
+- Qlik Sense Client Managed Distribution API are currently private so their use is unsupported at this stage. Use at your own risk.
+- A Qlik Sense Client Managed UI bug can appear to list all the deployments when you have above 50 deployments. 
+
 ## A first step in Qlik Cloud... What's the next move?
+
+
 
