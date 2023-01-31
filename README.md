@@ -84,7 +84,7 @@ Main used API are :
 5. Force the distribution of the application
 6. Execute the initial move of the application to a managed space
 
-Here a [Postman collection]() showing this process.
+Here a [Postman collection](https://github.com/BaptisteDurand/QlikCloud-MultiTenantMultiCloud/blob/main/5.%20OEM%20Multitenancy%20-%20Multi%20Cloud%20Setup.postman_collection.json) showing this process.
 
 ![image](https://user-images.githubusercontent.com/24877503/215822429-9929a5dd-ef3c-4acc-aa0d-3414ad716911.png)
 
@@ -96,5 +96,13 @@ As mentionned previously some limitations or consideration must be remind for a 
 
 ## A first step in Qlik Cloud... What's the next move?
 
+Multi-Cloud enable you to move fast your customer to Qlik cloud and leverage powerful Qlik Cloud unique capabilities.
+RIM node (Qlik front-end servers) decommissionning allow you a fast ROI.
 
+After this first step you can continue your Qlik Cloud journey in Data integration and movement to : 
+- Access to your data directly from Qlik Cloud
+- Reload your data in Qlik Cloud
+- Perform Chanage Data Capture
+- Deploy powerful AutoML algorithm.
 
+Explore [integration.qlik.com](https://integration.qlik.com)
