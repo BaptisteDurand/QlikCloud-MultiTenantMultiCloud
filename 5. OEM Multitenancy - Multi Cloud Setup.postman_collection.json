@@ -1,0 +1,567 @@
+{
+	"info": {
+		"_postman_id": "ab547530-39c7-40ae-9581-43478d3a3b64",
+		"name": "5. OEM Multitenancy - Multi Cloud Setup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3615436"
+	},
+	"item": [
+		{
+			"name": "5.1 Create Distribution Tenant on QSE-CM - Not Public API",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"target_tenant_hostname\", pm.globals.get(\"target_tenant_hostname\"));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"deploymentId\",responseData.id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenQSCM}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{{deploymentName}}\",\r\n  \"audience\": \"qlik.api\",\r\n  \"serviceUrl\": \"https://{{target_tenant_hostname}}\",\r\n  \"localBearerToken\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{envQSCM}}{{headerQSCM}}/api/hds/v1/Deployments",
+					"protocol": "https",
+					"host": [
+						"{{envQSCM}}{{headerQSCM}}"
+					],
+					"path": [
+						"api",
+						"hds",
+						"v1",
+						"Deployments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.2 Get Deployments API  - Not Public API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"deploymentBearerToken\",pm.response.text());\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenQSCM}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{envQSCM}}{{headerQSCM}}/api/hds/v1/Deployments/{{deploymentId}}/elastictokenconfig?qcsFormat=True",
+					"protocol": "https",
+					"host": [
+						"{{envQSCM}}{{headerQSCM}}"
+					],
+					"path": [
+						"api",
+						"hds",
+						"v1",
+						"Deployments",
+						"{{deploymentId}}",
+						"elastictokenconfig"
+					],
+					"query": [
+						{
+							"key": "qcsFormat",
+							"value": "True"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.3 Get Target Tenant access token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"target_tenant_access_token\", responseJson.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"target_tenant_hostname\", pm.globals.get(\"target_tenant_hostname\"));\r",
+							"pm.collectionVariables.set(\"client_id\", pm.globals.get(\"client_id\"));\r",
+							"pm.collectionVariables.set(\"client_secret\", pm.globals.get(\"client_secret\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"client_id\":\"{{client_id}}\",\r\n    \"client_secret\":\"{{client_secret}}\",\r\n    \"grant_type\":\"client_credentials\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{target_tenant_hostname}}/oauth/token",
+					"protocol": "https",
+					"host": [
+						"{{target_tenant_hostname}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.4 Create Multi cloud IDP - Step 1 Get target tenantId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"pm.collectionVariables.set(\"target_tenant_id\", responseJson.tenantId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{target_tenant_access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{target_tenant_hostname}}/api/v1/users/me",
+					"protocol": "https",
+					"host": [
+						"{{target_tenant_hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.4 Create Multi cloud IDP - Step 2 Ceate IDP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{target_tenant_access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"provider\": \"qlik\",\r\n\"description\": \"Automatic\",\r\n\"base64Encoded\": \"{{deploymentBearerToken}}\",\r\n\"interactive\": false,\r\n\"protocol\": \"qsefw-local-bearer-token\",\r\n\"tenantIds\": [\"{{target_tenant_id}}\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{target_tenant_hostname}}/api/v1/identity-providers",
+					"protocol": "https",
+					"host": [
+						"{{target_tenant_hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"identity-providers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.5 Force Distribution of a specific App - Update App - Step 1 Get app info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"appMetaData\", pm.response.text());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Qlik-Xrfkey",
+						"value": "0123456789ABCDEF",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenQSCM}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{envQSCM}}{{headerQSCM}}/qrs/app/{{appId}}?Xrfkey=0123456789ABCDEF",
+					"protocol": "https",
+					"host": [
+						"{{envQSCM}}{{headerQSCM}}"
+					],
+					"path": [
+						"qrs",
+						"app",
+						"{{appId}}"
+					],
+					"query": [
+						{
+							"key": "Xrfkey",
+							"value": "0123456789ABCDEF"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.5 Force Distribution of a specific App - Update App - Step 2 Update app info",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Qlik-Xrfkey",
+						"value": "0123456789ABCDEF",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{tokenQSCM}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{appMetaData}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{envQSCM}}{{headerQSCM}}/qrs/app/{{appId}}?Xrfkey=0123456789ABCDEF",
+					"protocol": "https",
+					"host": [
+						"{{envQSCM}}{{headerQSCM}}"
+					],
+					"path": [
+						"qrs",
+						"app",
+						"{{appId}}"
+					],
+					"query": [
+						{
+							"key": "Xrfkey",
+							"value": "0123456789ABCDEF"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.6 Move distributed app to a managed space - Step 0 Get App Metadata - Information only - Note : Execute after Application Upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{target_tenant_access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{target_tenant_hostname}}/api/v1/apps/{{appId}}",
+					"protocol": "https",
+					"host": [
+						"{{target_tenant_hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"apps",
+						"{{appId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.6 Move distributed app to a managed space - Step 1 Get spaceId",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();\r",
+							"pm.collectionVariables.set(\"targetSpaceId\", responseJson.data[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{target_tenant_access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{target_tenant_hostname}}/api/v1/spaces?filter=name eq \"{{targetSpaceName}}\"",
+					"protocol": "https",
+					"host": [
+						"{{target_tenant_hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"spaces"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "name eq \"{{targetSpaceName}}\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5.6 Move distributed app to a managed space - Step 2 Move the app",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{target_tenant_access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"spaceId\": \"{{targetSpaceId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{target_tenant_hostname}}/api/v1/apps/{{appId}}/space",
+					"protocol": "https",
+					"host": [
+						"{{target_tenant_hostname}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"apps",
+						"{{appId}}",
+						"space"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "tokenQSCM",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJidXIiLCJ1c2VyZGlyZWN0b3J5Ijoiand0IiwiQ3VzdG9tZXJHcm91cCI6IkN1c3RvbWVyMSJ9.TNaJ6-DIHfkQm_fIF7_Oy8w_kyoUKg-4qGQJYwGMXZ6GoNH9zNZ4ztb82Af7c8i8h3kGr_6wxOWC_SViJH3Y4VEX2JhXpkO5me-W2h0bt1mz36R-oLb6atfrlwfz7raym9g5SRKOCRQlN62FuJ-HBZtzPARwqCDp4YaiGi0YqQjQTQR08OLetdK0ygyiS-IGnd_VsziGZTQz8DZNhp2wEBHOYA03t0_bsaNm08PX8yidh461V-T35MoBrLTfAcMqQq756-TfBb1bRMc75Ybpxz34dC-4XIwC4ZKTjbip8z1TSZdM8PN0K9ME2xwKqz2dMzsDSnO_YWg4wmhLSpApEg",
+			"type": "string"
+		},
+		{
+			"key": "headerQSCM",
+			"value": "/jwt"
+		},
+		{
+			"key": "envQSCM",
+			"value": "172.21.20.90"
+		},
+		{
+			"key": "target_tenant_hostname",
+			"value": ""
+		},
+		{
+			"key": "deploymentId",
+			"value": ""
+		},
+		{
+			"key": "deploymentBearerToken",
+			"value": ""
+		},
+		{
+			"key": "client_id",
+			"value": ""
+		},
+		{
+			"key": "client_secret",
+			"value": ""
+		},
+		{
+			"key": "target_tenant_access_token",
+			"value": ""
+		},
+		{
+			"key": "target_tenant_id",
+			"value": ""
+		},
+		{
+			"key": "deploymentName",
+			"value": "ABC",
+			"type": "string"
+		},
+		{
+			"key": "appId",
+			"value": "bff00875-8936-45ad-a2ab-b15bb6934982"
+		},
+		{
+			"key": "appMetaData",
+			"value": ""
+		},
+		{
+			"key": "targetSpaceName",
+			"value": "platform-ops-example-shared"
+		},
+		{
+			"key": "targetSpaceId",
+			"value": ""
+		}
+	]
+}
