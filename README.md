@@ -1,7 +1,3 @@
-# Multi Tenant & Multi Cloud Or *How to move fast to Qlik Cloud for OEM?*
-
-## Context
-
 A Qlik Sense to Qlik Cloud migration can be performed with different strategies regarding your goals, your current cloud architecture and the expected values.
 - Are you focusing on new customer deployment?
 - Are you looking for On-Premise Qlik servers Footprint reduction?
